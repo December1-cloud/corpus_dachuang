@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语料投稿 | 语用学研究平台</title>
+    <style>
+        :root {
+            --primary-color: #2348d7;
+            --accent-color: #11a4dd;
+            --background-light: #f5f7fb;
+            --text-dark: #2c3e50;
+            --border-color: #e0e6ed;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: var(--background-light);
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 投稿容器 */
+        .submission-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 80px auto 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .form-header {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 20px; /* 行间距15px，列间距20px */
+    margin-bottom: 20px;
+}
+
+.checkbox-item {
+    flex: 1 1 calc(25% - 20px); /* 每行显示4个 */
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f8f9fc;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.checkbox-item:hover {
+    background: #eef2ff;
+}
+
+@media (max-width: 768px) {
+    .checkbox-item {
+        flex-basis: calc(50% - 10px); /* 小屏幕每行显示2个 */
+    }
+}
+
+@media (max-width: 480px) {
+    .checkbox-item {
+        flex-basis: 100%; /* 超小屏幕每行显示1个 */
+    }
+}
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--accent-color);
+        }
+
+        #fileInput {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+        }
+
+        .file-hint {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(17, 164, 221, 0.1);
+        }
+
+        .submit-btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #0d8db9;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .submission-container {
+                padding: 20px;
+                margin-top: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav-bar">
+        <a href="submit.html" class="nav-btn">投稿入口</a>
+        <a href="feedback.html" class="nav-btn">反馈通道</a>
+    </nav>
+
+    <!-- 投稿容器 -->
+    <div class="submission-container">
+        <h2 class="form-header">语料投稿表单</h2>
+
+        <form id="submissionForm">
+            <!-- 语料类型选择 -->
+            <div class="form-group">
+                <label>语料类型选择</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="1" name="type">
+                        <label for="1">边界-停顿-自然停顿</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="2" name="type">
+                        <label for="2">边界-停顿-非自然停顿</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="3" name="type">
+                        <label for="3">边界-停顿-情绪停顿</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="4" name="type">
+                        <label for="4">边界-停顿-非情绪停顿</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="5" name="type">
+                        <label for="5">边界-停顿-对称停顿</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="6" name="type">
+                        <label for="6">边界-停顿-非对称停顿</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="7" name="type">
+                        <label for="7">边界-终止-口语型终止</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="8" name="type">
+                        <label for="8">边界-终止-书面型终止</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="9" name="type">
+                        <label for="9">插入-竞争性插入</label>
+                    </div><div class="checkbox-item">
+                        <input type="checkbox" id="10" name="type">
+                        <label for="10">插入-支持性插入-强意义</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="13" name="type">
+                        <label for="13">插入-支持性插入-弱意义</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="11" name="type">
+                        <label for="11">引用-引用自身话语-补充</label>
+                    </div>
+                     <div class="checkbox-item">
+                        <input type="checkbox" id="14" name="type">
+                        <label for="14">引用-引用自身话语-修正</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="12" name="type">
+                        <label for="12">引用-引用他人话语-针对性回应</label>
+                    </div>
+                </div>
+                <div class="error-message" id="typeError">请至少选择一种语料类型</div>
+            </div>
+
+            <!-- 文件上传 -->
+            <div class="form-group">
+                <label>文件上传</label>
+                <div class="file-upload">
+                    <input type="file" id="fileInput" accept=".txt,.docx,.pdf,.jpg,.jpeg" multiple required>
+                    <p>点击选择或拖拽文件到这里</p>
+                    <p class="file-hint">支持格式：txt/docx/pdf/jpg，单个文件不超过50MB</p>
+                </div>
+                <div class="error-message" id="fileError"></div>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="form-group">
+                <label for="email">联系邮箱</label>
+                <input type="email" id="email" placeholder="example@domain.com" required>
+                <div class="error-message" id="emailError">请输入有效的邮箱地址</div>
+            </div>
+
+            <button type="submit" class="submit-btn">提交语料</button>
+        </form>
+    </div>
+
+    <script>
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+        const ALLOWED_TYPES = [
+            'text/plain',
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg'
+        ];
+
+        const form = document.getElementById('submissionForm');
+        const fileInput = document.getElementById('fileInput');
+
+        // 文件验证
+        fileInput.addEventListener('change', () => {
+            const files = Array.from(fileInput.files);
+            let isValid = true;
+            const errorElement = document.getElementById('fileError');
+
+            files.forEach(file => {
+                if (file.size > MAX_FILE_SIZE) {
+                    errorElement.textContent = `文件 ${file.name} 超过50MB限制`;
+                    errorElement.style.display = 'block';
+                    isValid = false;
+                }
+                if (!ALLOWED_TYPES.includes(file.type)) {
+                    errorElement.textContent = `不支持的文件类型: ${file.type}`;
+                    errorElement.style.display = 'block';
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                errorElement.style.display = 'none';
+            }
+        });
+
+        // 表单提交
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // 验证语料类型选择
+            const typeCheckboxes = document.querySelectorAll('input[name="type"]:checked');
+            if (typeCheckboxes.length === 0) {
+                document.getElementById('typeError').style.display = 'block';
+                return;
+            }
+
+            // 验证文件
+            if (fileInput.files.length === 0) {
+                document.getElementById('fileError').textContent = '请选择上传文件';
+                document.getElementById('fileError').style.display = 'block';
+                return;
+            }
+
+            // 构造表单数据
+            const formData = new FormData(form);
+
+            try {
+                // 这里添加实际提交逻辑
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('感谢您的投稿！您的分享将为语料库注入更加多样化的语言样本。我们将于3个工作日内审核并与您联系！  ');
+                    form.reset();
+                } else {
+                    throw new Error('提交失败');
+                }
+            } catch (error) {
+                alert('感谢您的投稿！您的分享将为语料库注入更加多样化的语言样本。我们将于3个工作日内审核并与您联系！');
+                console.error('Submission error:', error);
+            }
+        });
+    </script>
+</body>
+
+</html>
